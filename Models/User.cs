@@ -1,6 +1,6 @@
 ﻿namespace Test_task.Models
 {
-    public class Client
+    public class User
     {
         public int Id { get; set; } // идентификатор
         public string FirstName { get; set; } = string.Empty; // имя
