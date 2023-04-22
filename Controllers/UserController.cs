@@ -9,14 +9,14 @@ namespace Test_task.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly IUserService _userService;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IFileService _fileService;
 
 
-        public UserController(ILogger<UserController> logger, IUserService userService, IWebHostEnvironment webHostEnvironment)
+        public UserController(ILogger<UserController> logger, IUserService userService, IFileService fileService)
         {
             _logger = logger;
             _userService = userService;
-            _webHostEnvironment = webHostEnvironment;
+            _fileService = fileService;
         }
 
 
@@ -103,32 +103,57 @@ namespace Test_task.Controllers
             return Ok(result);
         }
 
-        [HttpPost("ImportUsers")]
-        public async Task<ActionResult<List<User>>> ImportUsers()
+        [HttpPost("ImportUsersJson")]
+        public async Task<ActionResult<List<User>>> ImportUsersJson()
         {
-            string path = "users.json";
-            var result = _userService.ImportUsers(path);
+            string path = "Data/Users.json";
+            var result = _fileService.ImportUsersJson(path);
 
             if (result is null)
             {
-                _logger.LogError("Error 404. The 'users.json' file was not found.");
+                _logger.LogError("Error 404. The 'Users.json' file was not found.");
                 return NotFound("The 'users.json' file was not found!");
             }
 
-            _logger.LogInformation("Users have been successfully imported from the 'users.json' file");
+            _logger.LogInformation("Users have been successfully imported from the 'Users.json' file");
             return Ok(result);
         }
 
-        [HttpGet("ExportUsers")]
-        public async Task<IActionResult> ExportUsers()
+        [HttpGet("ExportUsersJson")]
+        public async Task<IActionResult> ExportUsersJson()
         {
-            string path = "users.json";
-            var result = _userService.ExportUsers(path);
+            string path = "Data/Users.json";
 
-            Console.WriteLine(path);
+            var result = _fileService.ExportUsersJson(path);
 
-            _logger.LogInformation("Users have been successfully exported to the 'users.json' file");
-            return File(result, "users/json");
+            _logger.LogInformation("Users have been successfully exported to the 'Users.json' file");
+            return File(result, "text/json", "Users.json");
+        }
+
+        [HttpPost("ImportUsersExcel")]
+        public async Task<ActionResult<List<User>>> ImportUsersExcel()
+        {
+            string path = "Data/Users.xlsx";
+            var result = _fileService.ImportUsersExcel(path);
+
+            if (result is null)
+            {
+                _logger.LogError("Error 404. The 'Users.xlsx' file was not found.");
+                return NotFound("The 'users.xlsx' file was not found!");
+            }
+
+            _logger.LogInformation("Users have been successfully imported from the 'Users.xlsx' file");
+            return Ok(result);
+        }
+
+        [HttpGet("ExportUsersExcel")]
+        public async Task<IActionResult> ExportUsersExcel()
+        {
+            string path = "Data/Users.xlsx";
+            var result = _fileService.ExportUsersExcel(path);
+
+            _logger.LogInformation("Users have been successfully exported to the 'Users.xlsx' file");
+            return File(result, "text/xlsx", "Users.xlsx");
         }
     }
 }

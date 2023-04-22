@@ -1,5 +1,7 @@
 global using Test_task.Models;
 global using Test_task.Services.UserService;
+global using Test_task.Services.FileService;
+global using Test_task.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 var app = builder.Build();
 
